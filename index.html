@@ -1,128 +1,254 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="UTF-8">
-    <title>搜索导航页面</title>
-    <style>
-      body {
-        font-family: Arial, sans-serif;
-        background-image: url("a.jpg");
-        background-position: center center;
-        background-size: auto;
-        background-position: auto;
-        
-        margin: 0;
-        padding: 0;
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+  <!--若是手机显示则等于手机宽度-->
+  <title>徐志祥</title>
+  <style>
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background-color: #e493d0;
+      background-image:
+        radial-gradient(closest-side, rgba(235, 105, 78, 1), rgba(235, 105, 78, 0)),
+        radial-gradient(closest-side, rgba(243, 11, 164, 1), rgba(243, 11, 164, 0)),
+        radial-gradient(closest-side, rgba(254, 234, 131, 1), rgba(254, 234, 131, 0)),
+        radial-gradient(closest-side, rgba(170, 142, 245, 1), rgba(170, 142, 245, 0)),
+        radial-gradient(closest-side, rgba(150, 248, 147, 1), rgba(150, 248, 147, 0));
+      background-size:
+        130vmax 130vmax,
+        80vmax 80vmax,
+        90vmax 90vmax,
+        110vmax 110vmax,
+        90vmax 90vmax;
+      background-position:
+        -80vmax -80vmax,
+        60vmax 60vmax,
+        10vmax 10vmax,
+        -30vmax -10vmax,
+        50vmax 50vmax;
+      background-repeat: no-repeat;
+      animation: 20s movement linear infinite;
+    }
+
+    span {
+      position: relative;
+      z-index: 10;
+      display: flex;
+      min-height: 100vh;
+      width: 100%;
+      justify-content: center;
+      align-items: center;
+      font-size: 5rem;
+      color: transparent;
+      text-shadow:
+        0px 0px 1px rgba(255, 255, 255, .6),
+        0px 4px 4px rgba(0, 0, 0, .05);
+    }
+
+    h1 {
+      text-align: center;
+      margin: 20px 0;
+      position: relative;
+      z-index: 10;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 5rem;
+      color: transparent;
+      text-shadow:
+        0px 0px 1px rgba(255, 255, 255, .6),
+        0px 4px 4px rgba(0, 0, 0, .05);
+    }
+
+    div {
+      text-align: center;
+      margin: 20px 0;
+      backdrop-filter: blur(5px);
+    }
+
+    img {
+      border-radius: 50%;
+    }
+
+    h2 {
+      margin-top: 50px;
+    }
+
+    form {
+      text-align: center;
+      margin: 30px 0;
+      backdrop-filter: blur(5px);
+      background-color: rgba(255, 255, 255, 0.4);
+      background-size: 100px;
+      border-radius: 100px;
+      /*边角改为圆滑*/
+      text-align: center;
+      padding: 30px;
+    }
+
+    label {
+      font-size: 20px;
+      margin-right: 10px;
+    }
+
+    input[type="text"] {
+      width: 300px;
+      padding: 10px;
+      font-size: 18px;
+      border: none;
+      border-radius: 100px;
+      box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+    }
+
+    input[type="submit"] {
+      background-color: #1e8fff;
+      color: #ffffff;
+      font-size: 18px;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background-color 0.3s ease-in-out;
+    }
+
+    input[type="submit"]:hover {
+      background-color: #ff8c00;
+    }
+
+    ul {
+      backdrop-filter: blur(5px);
+      background-color: rgba(255, 255, 255, 0.233);
+      border-radius: 100px;
+      /*边角改为圆滑*/
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+    }
+
+    li {
+      margin: 10px;
+      backdrop-filter: blur(5px);
+      background-color: rgba(255, 255, 255, 0.4);
+      border-radius: 100px;
+      padding: 10px;
+    }
+
+    a {
+      text-decoration: none;
+      color: #1e90ff;
+      font-size: 24px;
+      transition: color 0.3s ease-in-out;
+    }
+
+    a:hover {
+      color: #ff8c00;
+    }
+
+    @keyframes movement {
+
+      0%,
+      100% {
+        background-size:
+          130vmax 75vmax,
+          500vmax 200vmax,
+          90vmax 90vmax,
+          65vmax 110vmax,
+          90vmax 90vmax;
+        background-position:
+          -80vmax -80vmax,
+          60vmax 60vmax,
+          10vmax 10vmax,
+          -30vmax -10vmax,
+          50vmax 50vmax;
       }
 
-      h1 {
-        text-align: center;
-        margin: 20px 0;
-      }
-      div{text-align: center;
-        margin: 20px 0;
-        backdrop-filter: blur(5px);
-      }
-      img{
-        border-radius: 50%; 
-      }
-
-      h2 {
-        margin-top: 50px;
-      }
-
-      form {
-        text-align: center;
-        margin: 30px 0;
-        backdrop-filter: blur(5px);
-        background-color: rgba(255, 255, 255, 0.4);
-        background-size: 100px;
-      border-radius: 100px;/*边角改为圆滑*/
-      text-align:center;
-      padding:40px;
+      25% {
+        background-size:
+          100vmax 100vmax,
+          90vmax 90vmax,
+          100vmax 100vmax,
+          90vmax 90vmax,
+          60vmax 60vmax;
+        background-position:
+          -60vmax -90vmax,
+          50vmax -40vmax,
+          0vmax -20vmax,
+          -40vmax -20vmax,
+          40vmax 60vmax;
       }
 
-      label {
-        font-size: 20px;
-        margin-right: 10px;
+      50% {
+        background-size:
+          150vmax 150vmax,
+          85vmax 850vmax,
+          75vmax 75vmax,
+          86vmax 68vmax,
+          52vmax 52vmax;
+        background-position:
+          -75vmax -57vmax,
+          82vmax -90vmax,
+          85vmax -60vmax,
+          -50vmax -0vmax,
+          50vmax 75vmax;
       }
 
-      input[type="text"] {
-        width: 300px;
-        padding: 10px;
-        font-size: 18px;
-        border: none;
-        border-radius: 100px;
-        box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+      75% {
+        background-size:
+          80vmax 80vmax,
+          90vmax 90vmax,
+          80vmax 100vmax,
+          90vmax 96vmax,
+          86vmax 86vmax;
+        background-position:
+          -78vmax -90vmax,
+          86vmax -40vmax,
+          8vmax -20vmax,
+          -40vmax -20vmax,
+          6vmax 86vmax;
       }
+    }
+  </style>
+</head>
 
-      input[type="submit"] {
-        background-color: #1E90FF;
-        color: #FFFFFF;
-        font-size: 18px;
-        padding: 10px 20px;
-        border: none;
-        border-radius: 10px;
-        cursor: pointer;
-        transition: background-color 0.3s ease-in-out;
-      }
+<body>
+  <h1>xzx</h1>
+  <div id="xzx-image1" style="display: flex;
+    justify-content: center;">
 
-      input[type="submit"]:hover {
-        background-color: #FF8C00;
-      }
-
-      ul {
-        backdrop-filter: blur(5px);
-        background-color: rgba(255, 255, 255, 0.4);
-      border-radius: 100px;/*边角改为圆滑*/
-        list-style: none;
-        margin: 0;
-        padding: 0;
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: space-between;
-      }
-
-      li {
-        margin: 10px;
-      }
-
-      a {
-        text-decoration: none;
-        color: #1E90FF;
-        font-size: 24px;
-        transition: color 0.3s ease-in-out;
-      }
-
-      a:hover {
-        color: #FF8C00;
-      }
-    </style>
-  </head>
-  <body>
-    <h1>搜索导航页面</h1>
     <div style="
-    background-color: rgba(255, 255, 255, 0.6);
-    border-radius: 100px;/*边角改为圆滑*/
-    text-align:center;
-    padding:40px;
-    "><img src="https://i.328888.xyz/2023/02/22/xtlQF.jpeg" alt="xzx" width="80px" height="80px">
+          width: 80%;
+          background-color: rgba(255, 255, 255, 0.6);
+          border-radius: 100px; /*边角改为圆滑*/
+          text-align: center;
+          padding: 40px;
+        ">
+      <img src="https://i.328888.xyz/2023/02/22/xtlQF.jpeg" alt="xzx" width="80px" height="80px" />
+      <h3>徐志祥的个人网址</h3>
+      <p>正在学习中</p>
     </div>
+  </div>
 
-    <h2> 搜索引擎</h2>
-    <form action="https://www.baidu.com/">
-      <label for="search">百度</label>
-      <input type="text" id="search" name="q" placeholder="搜索...">
-      <input type="submit" value="搜索">
-    </form>
+  <h2>搜索引擎</h2>
+  <form action="https://www.baidu.com/">
+    <label for="search">百度</label>
+    <input type="text" id="search" name="q" placeholder="搜索..." />
+    <input type="submit" value="搜索" />
+  </form>
 
-    <h2>常用网站链接</h2>
-    <ul>
-      <li><a href="https://www.baidu.com/">百度</a></li>
-      <li><a href="https://www.zhihu.com/">知乎</a></li>
-      <li><a href="https://www.taobao.com/">淘宝</a></li>
-      <li><a href="https://www.jd.com/">京东</a></li>
-      <li><a href="https://xzx9353.github.io/xzx01/">徐志祥</a></li>
-    </ul>
-  </body>
+  <h2>常用网站链接</h2>
+  <ul>
+    <li><a href="https://www.baidu.com/">百度</a></li>
+    <li><a href="https://www.zhihu.com/">知乎</a></li>
+    <li><a href="https://www.taobao.com/">淘宝</a></li>
+    <li><a href="https://www.jd.com/">京东</a></li>
+    <li><a href="https://xzx9353.github.io/xzx01/">徐志祥</a></li>
+  </ul>
+</body>
+
 </html>
