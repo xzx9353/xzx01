@@ -1,1 +1,210 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edge TTS 示例</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+        textarea {
+            width: 80%;
+            height: 150px;
+            margin-bottom: 20px;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box; /* 确保 padding 和 border 不会增加总宽度 */
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        label {
+            margin-bottom: 10px;
+            font-size: 14px;
+            color: #555;
+        }
+        select {
+            padding: 8px;
+            font-size: 14px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+    </style>
+</head>
+<body>
 
+    <h1>Edge TTS 文本转语音示例</h1>
+
+    <textarea id="textToSpeak" placeholder="在这里输入您想朗读的文本..."></textarea>
+
+    <label for="voiceSelect">选择语音:</label>
+    <select id="voiceSelect">
+        <!-- 语音列表将在 JavaScript 中动态加载 -->
+    </select>
+
+    <button id="speakButton">朗读</button>
+    <button id="stopButton" disabled>停止</button>
+
+    <p><strong>注意:</strong> 您的浏览器需要支持 Web Speech API，并且可能需要用户交互（例如点击按钮）来启用 TTS。</p>
+
+    <script>
+        const textToSpeakElement = document.getElementById('textToSpeak');
+        const speakButton = document.getElementById('speakButton');
+        const stopButton = document.getElementById('stopButton');
+        const voiceSelect = document.getElementById('voiceSelect');
+
+        let synth = null;
+        let utterance = null;
+        let selectedVoice = null;
+
+        // 检查浏览器是否支持 SpeechSynthesis API
+        if ('speechSynthesis' in window) {
+            synth = window.speechSynthesis;
+        } else {
+            alert('您的浏览器不支持 Web Speech API。');
+            speakButton.disabled = true;
+        }
+
+        // 加载可用的语音
+        function populateVoiceList() {
+            const voices = synth.getVoices();
+            const chineseVoices = voices.filter(voice => voice.lang.startsWith('zh')); // 过滤中文语音
+            const englishVoices = voices.filter(voice => voice.lang.startsWith('en')); // 过滤英文语音
+
+            const allVoices = [...chineseVoices, ...englishVoices]; // 将中文和英文语音合并
+
+            voiceSelect.innerHTML = ''; // 清空现有选项
+
+            if (allVoices.length === 0) {
+                const option = document.createElement('option');
+                option.textContent = "未找到可用语音";
+                voiceSelect.appendChild(option);
+                return;
+            }
+
+            allVoices.forEach((voice, index) => {
+                const option = document.createElement('option');
+                // 格式化显示，例如： Microsoft Huihui - zh-CN (中文 - 中国)
+                option.textContent = `${voice.name} - ${voice.lang} (${voice.lang === 'zh-CN' ? '中文 - 中国' : voice.lang === 'zh-HK' ? '中文 - 香港' : voice.lang === 'zh-TW' ? '中文 - 台湾' : voice.lang === 'en-US' ? 'English - United States' : ''})`;
+                option.setAttribute('data-lang', voice.lang);
+                option.setAttribute('data-name', voice.name);
+                voiceSelect.appendChild(option);
+
+                // 尝试默认选择一个中文语音
+                if (voice.lang === 'zh-CN' && selectedVoice === null) {
+                    selectedVoice = voice;
+                    voiceSelect.selectedIndex = index;
+                }
+            });
+
+            // 如果没有找到中文语音，则选择第一个语音
+            if (selectedVoice === null && allVoices.length > 0) {
+                selectedVoice = allVoices[0];
+                voiceSelect.selectedIndex = 0;
+            }
+        }
+
+        // 当 voices 列表加载完成时触发
+        if (synth.onvoiceschanged !== undefined) {
+            synth.onvoiceschanged = populateVoiceList;
+        } else {
+            // 如果不支持 onvoiceschanged，则手动调用一次
+            populateVoiceList();
+        }
+
+        // 语音选择改变时更新 selectedVoice
+        voiceSelect.addEventListener('change', () => {
+            const selectedIndex = voiceSelect.selectedIndex;
+            const voices = synth.getVoices();
+            // 重新过滤以找到当前选择的语音
+            const chineseVoices = voices.filter(voice => voice.lang.startsWith('zh'));
+            const englishVoices = voices.filter(voice => voice.lang.startsWith('en'));
+            const allVoices = [...chineseVoices, ...englishVoices];
+            if (selectedIndex < allVoices.length) {
+                selectedVoice = allVoices[selectedIndex];
+            }
+        });
+
+
+        // 朗读按钮点击事件
+        speakButton.addEventListener('click', () => {
+            if (synth && textToSpeakElement.value.trim() !== '') {
+                // 如果有正在播放的语音，先停止
+                if (synth.speaking) {
+                    synth.cancel();
+                }
+
+                utterance = new SpeechSynthesisUtterance(textToSpeakElement.value);
+
+                // 设置选中的语音
+                if (selectedVoice) {
+                    utterance.voice = selectedVoice;
+                } else {
+                    // 如果没有选中的语音，尝试使用默认语音
+                    const voices = synth.getVoices();
+                    const defaultChineseVoice = voices.find(voice => voice.lang === 'zh-CN');
+                    if (defaultChineseVoice) {
+                        utterance.voice = defaultChineseVoice;
+                    } else {
+                        utterance.voice = voices[0]; // 否则使用第一个可用的语音
+                    }
+                }
+
+                // 设置语速和语调（可选，可以根据需要调整）
+                utterance.rate = 1.0; // 正常语速 (0.1 - 10.0)
+                utterance.pitch = 1.0; // 正常语调 (0.0 - 2.0)
+
+                synth.speak(utterance);
+
+                // 更新按钮状态
+                speakButton.disabled = true;
+                stopButton.disabled = false;
+
+                // 当语音播放完毕时，重置按钮状态
+                utterance.onend = () => {
+                    speakButton.disabled = false;
+                    stopButton.disabled = true;
+                };
+                 // 处理错误
+                utterance.onerror = (event) => {
+                    console.error('SpeechSynthesisUtterance error:', event);
+                    alert('朗读时发生错误。请检查您的浏览器设置或网络连接。');
+                    speakButton.disabled = false;
+                    stopButton.disabled = true;
+                };
+            } else if (textToSpeakElement.value.trim() === '') {
+                alert('请输入要朗读的文本！');
+            }
+        });
+
+        // 停止按钮点击事件
+        stopButton.addEventListener('click', () => {
+            if (synth && synth.speaking) {
+                synth.cancel(); // 停止所有正在进行的朗读
+                speakButton.disabled = false;
+                stopButton.disabled = true;
+            }
+        });
+
+    </script>
+
+</body>
+</html>
