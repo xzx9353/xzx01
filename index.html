@@ -39,29 +39,23 @@
       overflow-x: hidden;
     }
 
-    /* 背景层：漂流细网格 + 呼吸光斑（磨砂动效） */
+    /* 背景层：呼吸光斑（磨砂动效），已移除网格线 */
     .grid-overlay {
       position: fixed; inset: 0; pointer-events: none; z-index: 0;
-      background:
-        repeating-linear-gradient(0deg, transparent 0 23px, rgba(25,25,25,.05) 23px 24px),
-        repeating-linear-gradient(90deg, transparent 0 23px, rgba(25,25,25,.05) 23px 24px);
-      background-size: 24px 24px, 24px 24px;
-      animation: gridDrift 46s linear infinite;
+      background: transparent;
     }
     .grid-overlay::before {
       content: ""; position: absolute; inset: 0;
       background:
-        radial-gradient(55% 55% at 18% 18%, rgba(232,84,47,.12), transparent 62%),
-        radial-gradient(48% 48% at 84% 26%, rgba(212,175,55,.10), transparent 60%),
-        radial-gradient(60% 60% at 50% 104%, rgba(120,150,190,.08), transparent 62%);
-      animation: breathe 15s ease-in-out infinite alternate;
-    }
-    @keyframes gridDrift {
-      to { background-position: 0 240px, 240px 0; }
+        radial-gradient(60% 60% at 18% 16%, rgba(232,84,47,.18), transparent 60%),
+        radial-gradient(52% 52% at 84% 24%, rgba(212,175,55,.16), transparent 58%),
+        radial-gradient(64% 64% at 50% 110%, rgba(120,150,190,.13), transparent 62%),
+        radial-gradient(34% 34% at 70% 78%, rgba(232,84,47,.10), transparent 58%);
+      animation: breathe 13s ease-in-out infinite alternate;
     }
     @keyframes breathe {
-      from { opacity: .5; transform: scale(1); }
-      to   { opacity: 1;  transform: scale(1.07); }
+      0%   { opacity: .35; transform: scale(.94); filter: blur(2px); }
+      100% { opacity: 1;   transform: scale(1.08); filter: blur(0); }
     }
 
     a { color: var(--accent); text-decoration: none; }
