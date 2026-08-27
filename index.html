@@ -294,9 +294,10 @@
     .showcase { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
     .show { background: var(--paper); border: 1px solid var(--line); border-radius: 18px; overflow: hidden; display: flex; flex-direction: column; }
     .show .media { position: relative; aspect-ratio: 16/10; background: #101012; overflow: hidden; display: grid; place-items: center; }
-    .show .media img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .3s ease-in-out; }
-    .show:hover .media img { transform: scale(1.04); }
-    .show .media video { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .show .media img { width: 100%; height: 100%; object-fit: contain; display: block; transition: transform .3s ease-in-out; }
+    .show .media img, .show .media video { cursor: zoom-in; }
+    .show:hover .media img { transform: scale(1.03); }
+    .show .media video { width: 100%; height: 100%; object-fit: contain; display: block; }
     .show .stage {
       position: absolute; top: 12px; left: 12px; z-index: 2;
       font-family: var(--mono); font-size: 11px; letter-spacing: 1px;
@@ -314,7 +315,7 @@
       display: flex; transition: transform .3s ease-in-out;
     }
     .car .slide { min-width: 100%; display: grid; place-items: center; }
-    .car .slide img, .car .slide video { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .car .slide img, .car .slide video { width: 100%; height: 100%; object-fit: contain; display: block; cursor: zoom-in; }
     .car-arrow {
       position: absolute; top: 50%; transform: translateY(-50%); z-index: 4;
       width: 30px; height: 30px; border-radius: 50%; border: none; cursor: pointer;
@@ -346,6 +347,33 @@
     .more-btn:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-2px); }
     .showcase-more { display: none; margin-top: 4px; }
     .showcase-more.open { display: grid; }
+
+    /* 全屏展示 lightbox */
+    .lightbox {
+      position: fixed; inset: 0; z-index: 1000;
+      background: rgba(8,8,8,.95);
+      display: none; align-items: center; justify-content: center;
+      backdrop-filter: blur(2px);
+    }
+    .lightbox.open { display: flex; }
+    .lb-stage { width: min(92vw, 1200px); height: 86vh; display: grid; place-items: center; }
+    .lb-media { max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 6px; box-shadow: 0 20px 60px rgba(0,0,0,.6); background: #000; }
+    .lb-close, .lb-prev, .lb-next {
+      position: absolute; border: none; cursor: pointer; z-index: 10;
+      display: grid; place-items: center; color: #fff;
+      background: rgba(255,255,255,.12); transition: background .3s ease-in-out;
+    }
+    .lb-close:hover, .lb-prev:hover, .lb-next:hover { background: var(--accent); }
+    .lb-close { top: 20px; right: 24px; width: 44px; height: 44px; border-radius: 50%; font-size: 24px; font-family: var(--mono); }
+    .lb-prev, .lb-next { top: 50%; transform: translateY(-50%); width: 48px; height: 48px; border-radius: 50%; font-size: 26px; font-family: var(--mono); }
+    .lb-prev { left: 22px; }
+    .lb-next { right: 22px; }
+    .lb-count {
+      position: absolute; top: 24px; left: 28px; z-index: 10;
+      font-family: var(--mono); font-size: 13px; letter-spacing: 2px; color: #ccc;
+      background: rgba(255,255,255,.10); padding: 6px 14px; border-radius: 999px;
+    }
+    .lb-hidden { display: none; }
 
     .reveal { opacity: 0; transform: translateY(26px); transition: opacity .7s ease, transform .7s ease; }
     .reveal.in { opacity: 1; transform: none; }
@@ -890,6 +918,15 @@
     <div class="copy">© 2026 XU ZHIXIANG · BUILT WITH HTML/CSS/JS</div>
   </footer>
 
+  <!-- 全屏展示 lightbox -->
+  <div class="lightbox" id="lightbox">
+    <span class="lb-count lb-hidden" id="lbCount"></span>
+    <button class="lb-close" id="lbClose" aria-label="关闭">×</button>
+    <button class="lb-prev lb-hidden" id="lbPrev" aria-label="上一张">‹</button>
+    <button class="lb-next lb-hidden" id="lbNext" aria-label="下一张">›</button>
+    <div class="lb-stage" id="lbStage"></div>
+  </div>
+
   <script>
     // 滚动进入动画
     const io = new IntersectionObserver((entries) => {
@@ -949,6 +986,84 @@
         box.querySelectorAll('.reveal').forEach(el => el.classList.add('in'));
       }
     }
+
+    // 全屏展示：点击图片/视频跳出，完整展示；轮播卡片可左右切换
+    const lb = document.getElementById('lightbox');
+    const lbStage = document.getElementById('lbStage');
+    const lbCount = document.getElementById('lbCount');
+    const lbPrev = document.getElementById('lbPrev');
+    const lbNext = document.getElementById('lbNext');
+    let lbCar = null;   // 当前浏览的轮播 .car，null 表示单媒体
+    let lbIdx = 0;
+    let lbVideos = [];  // 用于关闭时停止播放
+
+    function renderLbMedia(el) {
+      lbStage.innerHTML = '';
+      lbVideos.forEach(v => { try { v.pause(); } catch(e){} });
+      lbVideos = [];
+      if (el.tagName === 'VIDEO') {
+        const v = document.createElement('video');
+        v.src = el.currentSrc || el.src; v.className = 'lb-media';
+        v.setAttribute('controls', ''); v.setAttribute('playsinline', '');
+        lbStage.appendChild(v);
+        lbVideos.push(v);
+        v.play().catch(() => {});
+      } else {
+        const im = document.createElement('img');
+        im.src = el.currentSrc || el.src; im.alt = el.alt || '';
+        im.className = 'lb-media'; lbStage.appendChild(im);
+      }
+    }
+
+    function openLightbox(mediaEl) {
+      const car = mediaEl.closest('.car');
+      if (car) {
+        const slides = [...car.querySelectorAll('.slide')];
+        const idx = slides.indexOf(mediaEl.closest('.slide'));
+        lbCar = slides;
+        lbIdx = Math.max(0, idx);
+        lbPrev.classList.remove('lb-hidden');
+        lbNext.classList.remove('lb-hidden');
+      } else {
+        lbCar = null;
+        lbPrev.classList.add('lb-hidden');
+        lbNext.classList.add('lb-hidden');
+        renderLbMedia(mediaEl);
+      }
+      lbCount.classList.toggle('lb-hidden', !lbCar);
+      if (lbCar) syncLb();
+      lb.classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function syncLb() {
+      const media = lbCar[lbIdx].querySelector('img, video');
+      renderLbMedia(media);
+      lbCount.textContent = (lbIdx + 1) + ' / ' + lbCar.length;
+    }
+
+    function closeLightbox() {
+      lb.classList.remove('open');
+      document.body.style.overflow = '';
+      lbStage.innerHTML = '';
+      lbVideos.forEach(v => { try { v.pause(); } catch(e){} });
+      lbVideos = [];
+    }
+
+    lbPrev.addEventListener('click', e => { e.stopPropagation(); if (lbCar) { lbIdx = (lbIdx - 1 + lbCar.length) % lbCar.length; syncLb(); } });
+    lbNext.addEventListener('click', e => { e.stopPropagation(); if (lbCar) { lbIdx = (lbIdx + 1) % lbCar.length; syncLb(); } });
+    lbClose.addEventListener('click', closeLightbox);
+    lb.addEventListener('click', e => { if (e.target === lb) closeLightbox(); });
+    document.addEventListener('keydown', e => {
+      if (!lb.classList.contains('open')) return;
+      if (e.key === 'Escape') closeLightbox();
+      if (e.key === 'ArrowLeft' && lbCar) lbPrev.click();
+      if (e.key === 'ArrowRight' && lbCar) lbNext.click();
+    });
+    // 点击图片/视频触发全屏展示
+    document.querySelectorAll('.show .media img, .show .media video').forEach(m => {
+      m.addEventListener('click', () => openLightbox(m));
+    });
   </script>
 </body>
 </html>
