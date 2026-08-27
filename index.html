@@ -1,276 +1,793 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="zh-CN">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
-  <!--若是手机显示则等于手机宽度-->
-  <title>徐志祥</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="徐志祥 — AI 算法工程师｜企业级 AI 智能体平台、多智能体协作、RAG 知识库、大模型应用落地" />
+  <title>徐志祥 · AI Engineer — 个人作品集</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@500;700;900&family=Noto+Sans+SC:wght@300;400;500;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
   <style>
+    :root {
+      --bg: #f5f1e8;
+      --paper: #fdfbf5;
+      --card: #ffffff;
+      --ink: #191919;
+      --ink-2: #40403c;
+      --muted: #7a776f;
+      --accent: #e8542f;   /* 朱砂橙 */
+      --accent-soft: rgba(232, 84, 47, .12);
+      --line: rgba(25, 25, 25, .12);
+      --line-strong: rgba(25, 25, 25, .28);
+      --read: 62ch;
+      --display: "Noto Serif SC", "Songti SC", "SimSun", serif;
+      --body: "Noto Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif;
+      --mono: "JetBrains Mono", "SFMono-Regular", Consolas, monospace;
+      --ease: all .3s ease-in-out;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
     body {
       margin: 0;
-      min-height: 100vh;
-      background-color: #e493d0;
+      font-family: var(--body);
+      color: var(--ink);
+      background-color: var(--bg);
       background-image:
-        radial-gradient(closest-side, rgba(235, 105, 78, 1), rgba(235, 105, 78, 0)),
-        radial-gradient(closest-side, rgba(243, 11, 164, 1), rgba(243, 11, 164, 0)),
-        radial-gradient(closest-side, rgba(254, 234, 131, 1), rgba(254, 234, 131, 0)),
-        radial-gradient(closest-side, rgba(170, 142, 245, 1), rgba(170, 142, 245, 0)),
-        radial-gradient(closest-side, rgba(150, 248, 147, 1), rgba(150, 248, 147, 0));
-      background-size:
-        130vmax 130vmax,
-        80vmax 80vmax,
-        90vmax 90vmax,
-        110vmax 110vmax,
-        90vmax 90vmax;
-      background-position:
-        -80vmax -80vmax,
-        60vmax 60vmax,
-        10vmax 10vmax,
-        -30vmax -10vmax,
-        50vmax 50vmax;
-      background-repeat: no-repeat;
-      animation: 10s movement linear infinite;
+        radial-gradient(rgba(25,25,25,.055) 1px, transparent 1px);
+      background-size: 22px 22px;
+      line-height: 1.7;
+      letter-spacing: .2px;
+      overflow-x: hidden;
     }
 
-    span {
+    /* 柔和网格 + 顶部渐变氛围 */
+    .grid-overlay {
+      position: fixed; inset: 0; pointer-events: none; z-index: 0;
+      background:
+        linear-gradient(to bottom, rgba(232,84,47,.06), transparent 30%),
+        transparent;
+    }
+
+    a { color: var(--accent); text-decoration: none; }
+
+    /* ---------- 顶部导航 ---------- */
+    header.nav {
+      position: sticky; top: 0; z-index: 50;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 14px clamp(18px, 5vw, 56px);
+      backdrop-filter: blur(12px);
+      background: rgba(245,241,232,.78);
+      border-bottom: 1px solid var(--line);
+    }
+    .nav-brand {
+      font-family: var(--mono); font-weight: 600; font-size: 15px;
+      letter-spacing: .5px;
+    }
+    .nav-brand b { color: var(--accent); }
+    nav.links { display: flex; gap: 4px; flex-wrap: wrap; }
+    nav.links a {
+      font-size: 14px; color: var(--ink-2);
+      padding: 6px 12px; border-radius: 999px;
+      transition: var(--ease); position: relative;
+    }
+    nav.links a:hover { background: var(--accent-soft); color: var(--ink); }
+    nav.links a::after {
+      content: ""; position: absolute; left: 12px; right: 12px; bottom: 3px;
+      height: 2px; background: var(--accent);
+      transform: scaleX(0); transform-origin: left; transition: var(--ease);
+    }
+    nav.links a:hover::after { transform: scaleX(1); }
+
+    .nav-tag {
+      font-family: var(--mono); font-size: 11px; color: var(--accent);
+      border: 1px solid var(--accent); padding: 3px 8px; border-radius: 999px;
+      white-space: nowrap;
+    }
+
+    /* ---------- 通用容器 ---------- */
+    main { position: relative; z-index: 1; }
+    .wrap { width: min(var(--read) + 640px, 100%); margin: 0 auto; padding: 0 clamp(18px, 5vw, 56px); }
+
+    .section { padding: 76px 0 20px; }
+
+    /* 章节标题：编号 + 中文字 + 细线 */
+    .sec-head { display: flex; align-items: baseline; gap: 18px; margin-bottom: 34px; }
+    .sec-head .no {
+      font-family: var(--mono); font-weight: 600; font-size: 13px; color: var(--accent);
+      letter-spacing: 1px; transform: translateY(-2px);
+    }
+    .sec-head h2 {
+      font-family: var(--display); font-weight: 700; font-size: clamp(26px, 4vw, 38px);
+      margin: 0; letter-spacing: 2px; line-height: 1.2;
+    }
+    .sec-head .rule { flex: 1; height: 1px; background: var(--line-strong); align-self: center; transform: translateY(4px); }
+    .sec-head .en {
+      font-family: var(--mono); font-size: 11px; letter-spacing: 3px; color: var(--muted);
+      text-transform: uppercase; transform: translateY(-2px);
+    }
+
+    /* ---------- HERO ---------- */
+    .hero {
       position: relative;
-      z-index: 10;
-      display: flex;
-      min-height: 100vh;
-      width: 100%;
-      justify-content: center;
-      align-items: center;
-      font-size: 5rem;
-      color: transparent;
-      text-shadow:
-        0px 0px 1px rgba(255, 255, 255, .6),
-        0px 4px 4px rgba(0, 0, 0, .05);
+      display: grid; grid-template-columns: 1.2fr .8fr; gap: 40px; align-items: center;
+      min-height: 74vh; padding-top: 46px; padding-bottom: 60px;
+    }
+    .hero-label {
+      font-family: var(--mono); font-size: 12px; letter-spacing: 4px; color: var(--accent);
+      text-transform: uppercase; margin-bottom: 18px; display: flex; align-items: center; gap: 12px;
+    }
+    .hero-label::before { content: ""; width: 34px; height: 2px; background: var(--accent); }
+    .hero h1 {
+      font-family: var(--display); font-weight: 900;
+      font-size: clamp(56px, 11vw, 112px);
+      line-height: 1.02; margin: 8px 0 6px; letter-spacing: 4px;
+    }
+    .hero h1 .en {
+      display: block;
+      font-family: var(--mono); font-weight: 600; font-size: clamp(15px, 2.4vw, 22px);
+      color: var(--ink-2); letter-spacing: 6px; margin-top: 14px; text-transform: uppercase;
+    }
+    .hero .titleline {
+      font-size: clamp(17px, 2.6vw, 22px); font-weight: 500; color: var(--ink-2); margin: 18px 0 22px;
+    }
+    .hero .bio { color: var(--muted); max-width: 46ch; font-size: 15px; }
+    .hero .cta { margin-top: 30px; display: flex; gap: 14px; flex-wrap: wrap; }
+    .btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-family: var(--body); font-weight: 500; font-size: 14px;
+      padding: 12px 22px; border-radius: 999px; cursor: pointer;
+      transition: var(--ease);
+    }
+    .btn-fill { background: var(--ink); color: #fff; }
+    .btn-fill:hover { background: var(--accent); transform: translateY(-2px); }
+    .btn-ghost { border: 1px solid var(--line-strong); color: var(--ink); background: transparent; }
+    .btn-ghost:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-2px); }
+
+    /* 头像 */
+    .hero-visual { display: flex; justify-content: flex-end; }
+    .avatar {
+      position: relative; margin: 0; width: clamp(200px, 24vw, 300px); aspect-ratio: 1;
+      border-radius: 50%; overflow: hidden;
+      border: 1px solid var(--line-strong);
+      background: #fff;
+      box-shadow: 0 30px 60px -30px rgba(25,25,25,.4);
+    }
+    .avatar img { width: 100%; height: 100%; object-fit: cover; object-position: top; display: block; }
+    .avatar::before {
+      content: ""; position: absolute; inset: 12px; z-index: 2; pointer-events: none;
+      border-radius: 50%; border: 1px dashed rgba(232,84,47,.55);
+      animation: spin 40s linear infinite;
+    }
+    .avatar figcaption {
+      position: absolute; left: 0; right: 0; bottom: 18px; z-index: 3; text-align: center;
+      font-family: var(--mono); font-size: 11px; letter-spacing: 2px; color: #fff;
+      text-shadow: 0 1px 6px rgba(0,0,0,.6);
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .scroll-hint {
+      font-family: var(--mono); font-size: 11px; letter-spacing: 3px; color: var(--muted);
+      text-align: center; margin: 0 auto 10px; max-width: fit-content;
+      animation: bob 2.4s ease-in-out infinite;
+    }
+    @keyframes bob { 0%,100%{transform:translateY(0)} 50%{transform:translateY(6px)} }
+
+    /* ---------- 信息表 ---------- */
+    .dossier {
+      background: var(--paper); border: 1px solid var(--line);
+      border-radius: 18px; padding: 34px; overflow: hidden;
+    }
+    .dossier-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0; }
+    .d-item {
+      display: flex; gap: 16px; padding: 15px 4px;
+      border-bottom: 1px solid var(--line); align-items: flex-start;
+    }
+    .d-item:nth-last-child(-n+2) { border-bottom: none; }
+    .d-item .k {
+      font-family: var(--mono); font-size: 12px; color: var(--accent);
+      min-width: 74px; letter-spacing: .5px;
+      flex-shrink: 0; transform: translateY(2px);
+    }
+    .d-item .v { font-size: 15px; color: var(--ink); }
+
+    .intro { font-size: 15.5px; color: var(--ink-2); }
+
+    /* ---------- 能力列表 ---------- */
+    .skill-list { border-top: 1px solid var(--line-strong); }
+    .skill-row {
+      display: grid; grid-template-columns: 46px 1.1fr 2fr; gap: 18px; align-items: baseline;
+      padding: 17px 4px; border-bottom: 1px solid var(--line);
+      transition: var(--ease);
+    }
+    .skill-row:hover { background: var(--accent-soft); padding-left: 12px; padding-right: 12px; border-radius: 12px; }
+    .skill-row .idx { font-family: var(--mono); font-size: 12px; color: var(--muted); }
+    .skill-row .name { font-weight: 600; font-size: 15.5px; }
+    .skill-row .name::before { content: ""; display: inline-block; width: 8px; height: 8px; background: var(--accent); border-radius: 50%; margin-right: 10px; transform: translateY(-1px); }
+    .skill-row .desc { font-size: 14px; color: var(--icon, var(--muted)); }
+
+    /* ---------- 时间线 ---------- */
+    .timeline { position: relative; padding-left: 26px; }
+    .timeline::before {
+      content: ""; position: absolute; left: 6px; top: 6px; bottom: 6px; width: 2px;
+      background: var(--line-strong);
+    }
+    .tl-item { position: relative; padding: 0 0 40px 22px; }
+    .tl-item::before {
+      content: ""; position: absolute; left: -26px; top: 8px; width: 14px; height: 14px;
+      border-radius: 50%; background: var(--paper); border: 3px solid var(--accent); box-shadow: 0 0 0 4px var(--bg);
+    }
+    .tl-top { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; flex-wrap: wrap; }
+    .tl-role { font-family: var(--body); font-weight: 700; font-size: 18px; }
+    .tl-co { font-family: var(--body); font-size: 14px; color: var(--muted); }
+    .tl-date {
+      font-family: var(--mono); font-size: 12px; color: var(--accent);
+      border: 1px solid var(--accent); padding: 3px 10px; border-radius: 999px; white-space: nowrap;
+    }
+    .tl ul { margin: 12px 0 0; padding-left: 0; list-style: none; }
+    .tl li {
+      position: relative; padding-left: 18px; margin: 7px 0; font-size: 14.5px; color: var(--ink-2);
+    }
+    .tl li::before { content: "—"; position: absolute; left: 0; color: var(--accent); font-family: var(--mono); }
+
+    /* ---------- 项目卡片 ---------- */
+    .proj { margin-top: -16px; }
+    .proj-card {
+      background: var(--paper); border: 1px solid var(--line);
+      border-radius: 18px; margin-bottom: 20px; overflow: hidden;
+    }
+    .proj-head {
+      width: 100%; text-align: left; cursor: pointer;
+      display: flex; align-items: center; gap: 18px;
+      padding: 22px 26px; background: none; border: none;
+      font-family: var(--body); color: var(--ink); transition: var(--ease);
+    }
+    .proj-head:hover { background: var(--accent-soft); }
+    .proj-head .no {
+      font-family: var(--mono); font-weight: 600; font-size: 26px; color: var(--accent); width: 34px;
+    }
+    .proj-head .t { flex: 1; }
+    .proj-head .t h3 { margin: 0 0 4px; font-size: 18px; font-weight: 700; letter-spacing: 1px; }
+    .proj-head .t p { margin: 0; font-size: 13.5px; color: var(--muted); }
+    .proj-head .chev {
+      font-family: var(--mono); color: var(--muted); font-size: 16px;
+      transition: transform .3s ease-in-out; transform: rotate(180deg);
+    }
+    .proj-card.open .proj-head .chev { transform: rotate(0deg); }
+    .proj-body {
+      max-height: 0; overflow: hidden;
+      transition: max-height .3s ease-in-out, padding .3s ease-in-out, opacity .3s ease-in-out;
+      opacity: 0; padding: 0 26px;
+    }
+    .proj-card.open .proj-body { max-height: 900px; opacity: 1; padding: 0 26px 26px; }
+    .proj-body .desc { font-size: 14.5px; color: var(--ink-2); margin: 0 0 12px; }
+    .proj-body ul { margin: 0; padding-left: 0; list-style: none; }
+    .proj-body li { position: relative; padding-left: 18px; font-size: 14px; color: var(--muted); margin: 6px 0; }
+    .proj-body li::before { content: "▸"; position: absolute; left: 0; color: var(--accent); }
+    .tag-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+    .tag {
+      font-size: 12px; color: var(--ink-2); background: var(--accent-soft);
+      border-radius: 999px; padding: 4px 12px; letter-spacing: .3px;
     }
 
-    h1 {
-      text-align: center;
-      margin: 20px 0;
-      position: relative;
-      z-index: 10;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-size: 5rem;
-      color: transparent;
-      text-shadow:
-        0px 0px 1px rgba(255, 255, 255, .6),
-        0px 4px 4px rgba(0, 0, 0, .05);
+    /* ---------- 页脚 ---------- */
+    footer { margin-top: 80px; border-top: 1px solid var(--line-strong); background: var(--paper); }
+    .foot-inner {
+      max-width: calc(var(--read) + 640px); margin: 0 auto;
+      padding: 48px clamp(18px,5vw,56px) 40px;
+      display: grid; grid-template-columns: 1.2fr 1fr; gap: 40px;
+    }
+    .foot-inner .brand { font-family: var(--display); font-weight: 700; font-size: 26px; letter-spacing: 2px; }
+    .foot-inner .brand b { color: var(--accent); }
+    .foot-links { display: flex; flex-direction: column; gap: 10px; }
+    .foot-links a { color: var(--ink-2); display: flex; align-items: center; gap: 10px; font-size: 14px; transition: var(--ease); }
+    .foot-links a:hover { color: var(--accent); }
+    .foot-links a .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); }
+    .copy {
+      text-align: center; padding: 20px; color: var(--muted);
+      font-family: var(--mono); font-size: 12px; letter-spacing: 2px; border-top: 1px solid var(--line);
     }
 
-    div {
-      text-align: center;
-      margin: 20px 0;
-      backdrop-filter: blur(5px);
+    /* ---------- 入场动画 ---------- */
+    /* ---------- 作品展示 ---------- */
+    .showcase { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
+    .show { background: var(--paper); border: 1px solid var(--line); border-radius: 18px; overflow: hidden; display: flex; flex-direction: column; }
+    .show .media { position: relative; aspect-ratio: 16/10; background: #101012; overflow: hidden; display: grid; place-items: center; }
+    .show .media img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .3s ease-in-out; }
+    .show:hover .media img { transform: scale(1.04); }
+    .show .media video { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .show .stage {
+      position: absolute; top: 12px; left: 12px; z-index: 2;
+      font-family: var(--mono); font-size: 11px; letter-spacing: 1px;
+      background: rgba(25,25,25,.72); color: #fff; padding: 4px 10px; border-radius: 999px; backdrop-filter: blur(4px);
     }
+    .show .stage.live { background: var(--accent); }
+    .show .body { padding: 16px 20px 20px; }
+    .show .body h3 { margin: 0 0 6px; font-size: 17px; font-weight: 700; letter-spacing: .5px; }
+    .show .body p { margin: 0 0 12px; font-size: 13.5px; color: var(--muted); }
 
-    img {
-      border-radius: 50%;
-    }
+    .reveal { opacity: 0; transform: translateY(26px); transition: opacity .7s ease, transform .7s ease; }
+    .reveal.in { opacity: 1; transform: none; }
+    .hero .stagger { opacity: 0; transform: translateY(26px); animation: rise .8s ease forwards; }
+    .hero .stagger:nth-child(1){animation-delay:.05s}
+    .hero .stagger:nth-child(2){animation-delay:.14s}
+    .hero .stagger:nth-child(3){animation-delay:.23s}
+    .hero .stagger:nth-child(4){animation-delay:.32s}
+    .hero .stagger:nth-child(5){animation-delay:.41s}
+    @keyframes rise { to { opacity: 1; transform: none; } }
 
-    h2 {
-      margin-top: 50px;
-    }
-
-    form {
-      text-align: center;
-      margin: 30px 0;
-      backdrop-filter: blur(5px);
-      background-color: rgba(255, 255, 255, 0.4);
-      background-size: 100px;
-      border-radius: 100px;
-      /*边角改为圆滑*/
-      text-align: center;
-      padding: 30px;
-    }
-
-    label {
-      font-size: 20px;
-      margin-right: 10px;
-    }
-
-    input[type="text"] {
-      width: 300px;
-      padding: 10px;
-      font-size: 18px;
-      border: none;
-      border-radius: 100px;
-      box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
-    }
-
-    input[type="submit"] {
-      background-color: #1e8fff;
-      color: #ffffff;
-      font-size: 18px;
-      padding: 10px 20px;
-      border: none;
-      border-radius: 10px;
-      cursor: pointer;
-      transition: background-color 0.3s ease-in-out;
-    }
-
-    input[type="submit"]:hover {
-      background-color: #ff8c00;
-    }
-
-    ul {
-      backdrop-filter: blur(5px);
-      background-color: rgba(255, 255, 255, 0.233);
-      border-radius: 100px;
-      /*边角改为圆滑*/
-      list-style: none;
-      margin: 0;
-      padding: 0;
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
-    }
-    .wangZhi1 {
-      margin: 10px;
-      backdrop-filter: blur(5px);
-      background-color: rgba(255, 255, 255, 0.4);
-      border-radius: 100px;
-      padding: 10px;
-    }
-    .wangZhi2 {
-      margin: 10px;
-      backdrop-filter: blur(5px);
-      background-color: rgba(255, 255, 255, 0.4);
-      border-radius: 100px;
-      padding: 10px;
-    }
-
-
-
-    li {
-      margin: 10px;
-      backdrop-filter: blur(5px);
-      background-color: rgba(255, 255, 255, 0.4);
-      border-radius: 100px;
-      padding: 10px;
-    }
-
-    a {
-      text-decoration: none;
-      color: #1e90ff;
-      font-size: 24px;
-      transition: color 0.3s ease-in-out;
-    }
-
-    a:hover {
-      color: #ff8c00;
-    }
-
-    @keyframes movement {
-
-      0%,
-      100% {
-        background-size:
-          130vmax 75vmax,
-          500vmax 200vmax,
-          90vmax 90vmax,
-          65vmax 110vmax,
-          90vmax 90vmax;
-        background-position:
-          -80vmax -80vmax,
-          60vmax 60vmax,
-          10vmax 10vmax,
-          -30vmax -10vmax,
-          50vmax 50vmax;
-      }
-
-      25% {
-        background-size:
-          100vmax 100vmax,
-          90vmax 90vmax,
-          100vmax 100vmax,
-          90vmax 90vmax,
-          60vmax 60vmax;
-        background-position:
-          -60vmax -90vmax,
-          50vmax -40vmax,
-          0vmax -20vmax,
-          -40vmax -20vmax,
-          40vmax 60vmax;
-      }
-
-      50% {
-        background-size:
-          150vmax 150vmax,
-          85vmax 850vmax,
-          75vmax 75vmax,
-          86vmax 68vmax,
-          52vmax 52vmax;
-        background-position:
-          -75vmax -57vmax,
-          82vmax -90vmax,
-          85vmax -60vmax,
-          -50vmax -0vmax,
-          50vmax 75vmax;
-      }
-
-      75% {
-        background-size:
-          80vmax 80vmax,
-          90vmax 90vmax,
-          80vmax 100vmax,
-          90vmax 96vmax,
-          86vmax 86vmax;
-        background-position:
-          -78vmax -90vmax,
-          86vmax -40vmax,
-          8vmax -20vmax,
-          -40vmax -20vmax,
-          6vmax 86vmax;
-      }
+    /* ---------- 响应式 ---------- */
+    @media (max-width: 840px) {
+      .hero { grid-template-columns: 1fr; text-align: left; }
+      .hero-visual { justify-content: center; order: -1; margin-bottom: 6px; }
+      .dossier-grid { grid-template-columns: 1fr; }
+      .d-item:nth-last-child(-n+2) { border-bottom: 1px solid var(--line); }
+      .d-item:last-child { border-bottom: none; }
+      .skill-row { grid-template-columns: 34px 1fr; grid-template-areas: "i n" ". d"; gap: 0 12px; }
+      .skill-row .idx { grid-area: i; }
+      .skill-row .name { grid-area: n; }
+      .skill-row .desc { grid-area: d; padding-top: 4px; }
+      .foot-inner { grid-template-columns: 1fr; }
+      .showcase { grid-template-columns: 1fr; }
+      nav.links { display: none; }
+      .nav-brand + .nav-tag { margin-left: auto; }
     }
   </style>
 </head>
 
 <body>
-  <h1>xzx</h1>
-  <div id="xzx-image1" style="display: flex;
-    justify-content: center;">
+  <div class="grid-overlay"></div>
 
-    <div style="
-          width: 80%;
-          background-color: rgba(255, 255, 255, 0.6);
-          border-radius: 100px; /*边角改为圆滑*/
-          text-align: center;
-          padding: 40px;
-        ">
-      <img src="https://i.328888.xyz/2023/02/22/xtlQF.jpeg" alt="xzx" width="80px" height="80px" />
-      <h3>徐志祥的个人网址</h3>
-      <p>正在学习中</p>
-      <a class="wangZhi1" href="css flex布局.html">网址1</a>
-      <a class="wangZhi2" href="poi flex布局 copy.html">网址2</a>
-      <a class="wangZhi2" href="tw-to-3d.html">图文转3d</a>
-      <a class="wangZhi2" href="ASR.html">ASR识别</a>
-      <a class="wangZhi2" href="tts.html">tts生成</a>
-      <a class="wangZhi2" href="yolo.html">yolo识别</a>
+  <!-- 顶部导航 -->
+  <header class="nav">
+    <div class="nav-brand">XU·ZHI·<b>XIANG</b></div>
+    <nav class="links">
+      <a href="#profile">简介</a>
+      <a href="#info">信息</a>
+      <a href="#skills">能力</a>
+      <a href="#work">经历</a>
+      <a href="#projects">项目</a>
+      <a href="#showcase">作品</a>
+      <a href="#contact">联系</a>
+    </nav>
+    <div class="nav-tag">AI ENGINEER / CN</div>
+  </header>
+
+  <main class="wrap">
+
+    <!-- HERO -->
+    <section class="hero">
+      <div>
+        <div class="hero-label stagger">Personal Portfolio</div>
+        <h1 class="stagger">徐志祥<span class="en">AI Algorithm Engineer</span></h1>
+        <p class="titleline stagger">智能科学与技术 · 企业级 AI 智能体 / 大模型应用工程师</p>
+        <p class="bio stagger">
+          专注 AI Agent 平台建设、多智能体协作、MCP 工具体系与 RAG 知识库落地。
+          能独立完成从后端架构、模型接入、工具体系到前端交互展示的完整 AI 应用开发流程。
+        </p>
+        <div class="cta stagger">
+          <a class="btn btn-fill" href="#projects">查看项目</a>
+          <a class="btn btn-ghost" href="#contact">联系方式</a>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <figure class="avatar">
+          <img src="assets/avatar.jpg" alt="徐志祥" />
+          <figcaption>AI ENGINEER · 徐志祥</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <p class="scroll-hint">SCROLL ↓</p>
+
+    <!-- 个人信息 -->
+    <section class="section" id="info">
+      <div class="sec-head reveal">
+        <span class="no">01</span>
+        <h2>个人信息</h2>
+        <span class="en">Profile</span>
+        <div class="rule"></div>
+      </div>
+      <div class="dossier reveal">
+        <div class="dossier-grid">
+          <div class="d-item"><span class="k">姓名</span><span class="v">徐志祥</span></div>
+          <div class="d-item"><span class="k">性别</span><span class="v">男</span></div>
+          <div class="d-item"><span class="k">民族</span><span class="v">汉族</span></div>
+          <div class="d-item"><span class="k">籍贯</span><span class="v">福建龙岩</span></div>
+          <div class="d-item"><span class="k">出生年月</span><span class="v">2001.12</span></div>
+          <div class="d-item"><span class="k">政治面貌</span><span class="v">共青团员</span></div>
+          <div class="d-item"><span class="k">学历</span><span class="v">本科</span></div>
+          <div class="d-item"><span class="k">现居住地</span><span class="v">福建省厦门市集美区</span></div>
+          <div class="d-item"><span class="k">专业</span><span class="v">智能科学与技术</span></div>
+          <div class="d-item"><span class="k">联系电话</span><span class="v">15160695726</span></div>
+          <div class="d-item"><span class="k">毕业院校</span><span class="v">厦门工学院</span></div>
+          <div class="d-item"><span class="k">邮　箱</span><span class="v">935329913@qq.com</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 个人简介 -->
+    <section class="section" id="profile">
+      <div class="sec-head reveal">
+        <span class="no">02</span>
+        <h2>个人简介</h2>
+        <span class="en">About</span>
+        <div class="rule"></div>
+      </div>
+      <p class="intro reveal">
+        本科智能科学与技术专业，具备人工智能、大模型应用开发和 AI 平台架构设计经验。目前主要负责企业级
+        AI 智能体平台建设，拥有 <b>Agent 调度体系</b>、<b>多智能体协作</b>、<b>MCP 工具协议</b>、
+        <b>Skill 动态调用</b>、<b>RAG 知识库</b>、<b>上下文工程</b>、<b>Memory 机制</b> 以及大模型应用落地经验。
+        能够独立完成从<b>后端架构设计</b>、<b>模型接入</b>、<b>工具体系建设</b>到<b>前端交互展示</b>的完整 AI 应用开发流程。
+      </p>
+    </section>
+
+    <!-- 个人能力 -->
+    <section class="section" id="skills">
+      <div class="sec-head reveal">
+        <span class="no">03</span>
+        <h2>个人能力</h2>
+        <span class="en">Skills</span>
+        <div class="rule"></div>
+      </div>
+      <div class="skill-list reveal">
+        <div class="skill-row">
+          <span class="idx">01</span>
+          <span class="name">AI Agent 架构</span>
+          <span class="desc">Agent Harness 架构设计、任务规划、智能体路由、循环调度、工具调用、Skill 动态加载</span>
+        </div>
+        <div class="skill-row">
+          <span class="idx">02</span>
+          <span class="name">Agent 运行体系</span>
+          <span class="desc">决策器与执行引擎分离设计、Agent Runtime、指令体系、上下文管理</span>
+        </div>
+        <div class="skill-row">
+          <span class="idx">03</span>
+          <span class="name">大模型应用</span>
+          <span class="desc">OpenAI API、国内主流大模型 API 调用、本地大模型部署、Prompt 工程</span>
+        </div>
+        <div class="skill-row">
+          <span class="idx">04</span>
+          <span class="name">RAG 知识库</span>
+          <span class="desc">向量数据库、Embedding 检索、知识库构建、文档解析、上下文增强</span>
+        </div>
+        <div class="skill-row">
+          <span class="idx">05</span>
+          <span class="name">MCP 生态</span>
+          <span class="desc">MCP 协议、MCP Gateway 设计、工具注册、工具权限管理</span>
+        </div>
+        <div class="skill-row">
+          <span class="idx">06</span>
+          <span class="name">后端开发</span>
+          <span class="desc">Java Spring Boot、Python、MySQL、Redis、REST API、Docker</span>
+        </div>
+        <div class="skill-row">
+          <span class="idx">07</span>
+          <span class="name">AI 算法</span>
+          <span class="desc">PyTorch、TensorFlow、YOLO、OpenCV、NLP、模型训练及部署</span>
+        </div>
+        <div class="skill-row">
+          <span class="idx">08</span>
+          <span class="name">多媒体 AI</span>
+          <span class="desc">ASR、TTS、数字人、语音克隆、实时语音交互开发经验</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- 工作经历 -->
+    <section class="section" id="work">
+      <div class="sec-head reveal">
+        <span class="no">04</span>
+        <h2>工作经历</h2>
+        <span class="en">Experience</span>
+        <div class="rule"></div>
+      </div>
+      <div class="timeline reveal">
+        <div class="tl-item">
+          <div class="tl-top">
+            <div>
+              <div class="tl-role">AI 算法工程师</div>
+              <div class="tl-co">厦门集微科技有限公司</div>
+            </div>
+            <div class="tl-date">2024.08 — 2026.09</div>
+          </div>
+          <ul>
+            <li>完成 Agent Harness 架构设计与落地</li>
+            <li>搭建多智能体协作体系，实现用户输入理解、智能体选择、工具调用、任务执行和结果返回完整链路</li>
+            <li>设计智能体调度流程，包括意图识别、路径选择、Skill 激活、工具动态调用以及循环任务执行</li>
+            <li>建设 MCP 工具体系，实现 API 工具注册、工具管理、权限控制以及智能体能力扩展</li>
+            <li>负责上下文工程设计，包括会话存储、历史信息管理、上下文压缩、Memory 机制</li>
+            <li>开发 RAG 知识库系统，实现向量检索、知识增强和智能问答能力</li>
+            <li>完成 AI 平台前后端开发，包括 AI 聊天界面、流式响应、Markdown 解析、表格及图片可视化展示</li>
+            <li>负责多模型接入和模型调度，实现不同大模型 API 统一管理</li>
+          </ul>
+          <div class="tag-row">
+            <span class="tag">数字人</span><span class="tag">大模型应用</span><span class="tag">ASR · LLM · TTS 完整链路</span><span class="tag">商用一体机部署</span>
+          </div>
+          <ul style="margin-top:8px">
+            <li>独立完成实时数字人系统开发，实现 ASR、LLM、TTS 完整交互链路</li>
+            <li>部署 Whisper、FunASR、SenseVoice 等语音识别模型</li>
+            <li>实现 CosyVoice、GPT-SoVITS、XTTS-V2 等 TTS 声音合成和声音克隆</li>
+            <li>优化商用一体机部署方案，将实时交互延迟控制在 3 秒以内</li>
+          </ul>
+        </div>
+
+        <div class="tl-item">
+          <div class="tl-top">
+            <div>
+              <div class="tl-role">Android 开发工程师</div>
+              <div class="tl-co">厦门沃特沃德</div>
+            </div>
+            <div class="tl-date">2024.04 — 2024.07</div>
+          </div>
+          <ul>
+            <li>参与智能终端项目开发，负责 Android 系统应用修改、预置应用管理</li>
+            <li>熟悉 Linux 环境、ADB 调试、Git 版本管理及系统配置修改</li>
+          </ul>
+        </div>
+
+        <div class="tl-item">
+          <div class="tl-top">
+            <div>
+              <div class="tl-role">Python 开发工程师</div>
+              <div class="tl-co">厦门曝光科技有限公司</div>
+            </div>
+            <div class="tl-date">2023.11 — 2024.01</div>
+          </div>
+          <ul>
+            <li>负责数字人应用开发，实现语音识别、语音合成、大模型对话能力</li>
+            <li>开发实时交互应用，实现 ChatGPT 及讯飞星火模型接入</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- 项目经历 -->
+    <section class="section" id="projects">
+      <div class="sec-head reveal">
+        <span class="no">05</span>
+        <h2>项目经历</h2>
+        <span class="en">Projects</span>
+        <div class="rule"></div>
+      </div>
+      <div class="proj reveal">
+
+        <div class="proj-card open">
+          <button class="proj-head" onclick="toggle(this)" aria-expanded="true">
+            <span class="no">01</span>
+            <span class="t">
+              <h3>企业级 AI Agent 智能体平台研发 · 智引飞轮</h3>
+              <p>面向企业业务场景，研发大模型智能体平台，实现智能体编排、工具调用、知识增强和任务自动执行</p>
+            </span>
+            <span class="chev">▾</span>
+          </button>
+          <div class="proj-body">
+            <ul>
+              <li>负责 Agent Harness 架构设计，实现用户理解、智能体路由、任务执行、工具调用完整流程</li>
+              <li>搭建多智能体协作体系，实现 Agent 选择、Skill 动态加载和任务循环执行</li>
+              <li>建设 MCP 工具体系，实现工具注册、管理、权限控制及能力扩展</li>
+              <li>负责上下文工程设计，实现会话管理、上下文压缩和 Memory 机制</li>
+              <li>开发 RAG 知识库系统，实现文档检索、知识增强和智能问答</li>
+              <li>完成 AI 应用前后端开发，实现流式对话、Markdown、图片及表格展示</li>
+            </ul>
+            <div class="tag-row"><span class="tag">Agent Harness</span><span class="tag">MCP</span><span class="tag">RAG</span><span class="tag">多智能体</span><span class="tag">Python / Spring Boot</span></div>
+          </div>
+        </div>
+
+        <div class="proj-card">
+          <button class="proj-head" onclick="toggle(this)" aria-expanded="false">
+            <span class="no">02</span>
+            <span class="t">
+              <h3>实时数字人交互系统</h3>
+              <p>开发实时数字人交互应用，实现语音识别、智能对话、语音合成完整链路</p>
+            </span>
+            <span class="chev">▾</span>
+          </button>
+          <div class="proj-body">
+            <ul>
+              <li>独立完成 ASR + LLM + TTS 实时交互流程开发</li>
+              <li>集成 Whisper、FunASR、SenseVoice 实现语音识别</li>
+              <li>集成 CosyVoice、GPT-SoVITS、XTTS-V2 实现语音合成和声音克隆</li>
+              <li>优化模型调用和服务流程，将端到端交互延迟控制在 3 秒以内</li>
+              <li>完成新加坡中行数字人一体机在线版本开发，支撑海外展会应用</li>
+              <li>完成中国银行、新加坡金融数字人项目交付，包括 UI 定制、人脸识别集成、一体机部署</li>
+            </ul>
+            <div class="tag-row"><span class="tag">ASR</span><span class="tag">LLM</span><span class="tag">TTS</span><span class="tag">声音克隆</span><span class="tag">一体机部署</span></div>
+          </div>
+        </div>
+
+        <div class="proj-card">
+          <button class="proj-head" onclick="toggle(this)" aria-expanded="false">
+            <span class="no">03</span>
+            <span class="t">
+              <h3>开源 ASR 语音识别系统二次开发</h3>
+              <p>基于开源 ASR 模型进行二次开发，构建企业级语音识别服务，支持多语言及复杂场景语音转写</p>
+            </span>
+            <span class="chev">▾</span>
+          </button>
+          <div class="proj-body">
+            <ul>
+              <li>基于 Whisper、FunASR、SenseVoice 进行模型部署、服务封装和业务集成</li>
+              <li>优化推理流程，在华为云环境测试实现音频时长与转写耗时约 1:4 比例</li>
+              <li>支撑龙岩移动 ASR 业务落地，截至 2025 年底累计完成超过 14.9 万小时音频转写任务</li>
+              <li>完成印尼语 ASR 模型部署优化，支持海外业务拓展</li>
+            </ul>
+            <div class="tag-row"><span class="tag">Whisper</span><span class="tag">FunASR</span><span class="tag">SenseVoice</span><span class="tag">华为云</span><span class="tag">多语言</span></div>
+          </div>
+        </div>
+
+        <div class="proj-card">
+          <button class="proj-head" onclick="toggle(this)" aria-expanded="false">
+            <span class="no">04</span>
+            <span class="t">
+              <h3>华为昇腾大模型应用项目</h3>
+              <p>参与国产 AI 算力环境下的大模型部署和应用验证</p>
+            </span>
+            <span class="chev">▾</span>
+          </button>
+          <div class="proj-body">
+            <ul>
+              <li>完成神灯瞬悟相关模型在华为昇腾服务器部署</li>
+              <li>参与华为昇腾大模型比赛，项目获得二等奖</li>
+              <li>完成大模型算法备案相关工作</li>
+            </ul>
+            <div class="tag-row"><span class="tag">昇腾</span><span class="tag">国产算力</span><span class="tag">模型部署</span><span class="tag">二等奖</span></div>
+          </div>
+        </div>
+
+        <div class="proj-card">
+          <button class="proj-head" onclick="toggle(this)" aria-expanded="false">
+            <span class="no">05</span>
+            <span class="t">
+              <h3>AI 平台定制化及大模型应用探索</h3>
+              <p>基于开源 AI 平台和大模型框架进行二次开发，探索企业级 AI 应用落地</p>
+            </span>
+            <span class="chev">▾</span>
+          </button>
+          <div class="proj-body">
+            <ul>
+              <li>基于 Dify、MaxKB 等开源 AI 平台进行二次开发，实现企业品牌化定制，包括 UI 修改、功能调整和部署优化</li>
+              <li>完成本地大模型部署，使用 Ollama、Xinference 等推理框架运行大模型</li>
+              <li>使用 LLaMA Factory 对 DeepSeek、Qwen 等模型进行微调实验，探索企业领域模型优化方案</li>
+              <li>调研并实践 MemGPT、AutoGen 等 Agent 框架，验证长期记忆和工具调用能力</li>
+            </ul>
+            <div class="tag-row"><span class="tag">Dify / MaxKB</span><span class="tag">Ollama / Xinference</span><span class="tag">LLaMA Factory 微调</span><span class="tag">MemGPT / AutoGen</span></div>
+          </div>
+        </div>
+
+        <div class="proj-card">
+          <button class="proj-head" onclick="toggle(this)" aria-expanded="false">
+            <span class="no">06</span>
+            <span class="t">
+              <h3>AI 智能家具设计 · Demo</h3>
+              <p>最新项目（demo 阶段）：以大模型驱动的智能家具设计应用，探索 AI 在家居设计的落地</p>
+            </span>
+            <span class="chev">▾</span>
+          </button>
+          <div class="proj-body">
+            <ul>
+              <li>大模型驱动的智能家具设计与生成演示（demo 阶段）</li>
+              <li>探索 AI 生成在家居设计场景的交互与落地路径</li>
+            </ul>
+            <div class="tag-row"><span class="tag">Demo</span><span class="tag">AI 家具设计</span><span class="tag">大模型应用</span></div>
+          </div>
+        </div>
+
+        <div class="proj-card">
+          <button class="proj-head" onclick="toggle(this)" aria-expanded="false">
+            <span class="no">07</span>
+            <span class="t">
+              <h3>AI 调用 CAD 的 MCP 绘图</h3>
+              <p>最新项目：通过 MCP 工具协议让大模型直接驱动 CAD 完成绘图任务</p>
+            </span>
+            <span class="chev">▾</span>
+          </button>
+          <div class="proj-body">
+            <ul>
+              <li>基于 MCP 协议将 CAD 绘图能力封装为工具，供大模型动态调用</li>
+              <li>实现「自然语言 → MCP 工具 → CAD 绘制」链路，拓展 Agent 工程能力边界</li>
+            </ul>
+            <div class="tag-row"><span class="tag">MCP</span><span class="tag">CAD 绘图</span><span class="tag">工具调用</span></div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- 作品展示 -->
+    <section class="section" id="showcase">
+      <div class="sec-head reveal">
+        <span class="no">06</span>
+        <h2>作品展示</h2>
+        <span class="en">Showcase</span>
+        <div class="rule"></div>
+      </div>
+      <div class="showcase">
+        <div class="show reveal">
+          <div class="media">
+            <span class="stage live">平台演示</span>
+            <video src="assets/zhiling-feilun.mp4" controls preload="metadata" playsinline></video>
+          </div>
+          <div class="body">
+            <h3>AI Agent 智能体平台 · 智引飞轮</h3>
+            <p>企业级 AI Agent 平台演示，支持智能体编排、多智能体协作、MCP 工具调用与 RAG 知识增强。</p>
+            <div class="tag-row"><span class="tag">视频</span><span class="tag">Agent 平台</span></div>
+          </div>
+        </div>
+
+        <div class="show reveal">
+          <div class="media">
+            <span class="stage">DEMO</span>
+            <video src="assets/demo-ai-furniture.mp4" controls preload="metadata" playsinline></video>
+          </div>
+          <div class="body">
+            <h3>AI 智能家具设计（Demo）</h3>
+            <p>最新项目，demo 阶段。以大模型驱动的智能家具设计应用。</p>
+            <div class="tag-row"><span class="tag">视频</span><span class="tag">Demo 阶段</span></div>
+          </div>
+        </div>
+
+        <div class="show reveal">
+          <div class="media">
+            <span class="stage">项目落地</span>
+            <img src="assets/digital-human.png" alt="实时数字人界面" />
+          </div>
+          <div class="body">
+            <h3>实时数字人交互系统</h3>
+            <p>ASR + LLM + TTS 完整链路，支持声纹克隆与一体机部署。</p>
+            <div class="tag-row"><span class="tag">数字人</span><span class="tag">ASR · TTS</span></div>
+          </div>
+        </div>
+
+        <div class="show reveal">
+          <div class="media">
+            <span class="stage">新项目</span>
+            <img src="assets/cad-mcp.jpg" alt="AI 调用 CAD 的 MCP 绘图" />
+          </div>
+          <div class="body">
+            <h3>AI 调用 CAD · MCP 绘图</h3>
+            <p>通过 MCP 协议封装 CAD 绘图能力，让大模型自然语言直驱绘制。</p>
+            <div class="tag-row"><span class="tag">MCP</span><span class="tag">CAD 绘图</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- 页脚 -->
+  <footer id="contact">
+    <div class="foot-inner">
+      <div>
+        <div class="brand">徐<b>志祥</b></div>
+        <p style="color:var(--muted); margin-top:10px; font-size:14px; max-width:40ch;">
+          AI 算法工程师 · 专注企业级 AI 智能体平台与多模态应用落地。<br />
+          欢迎交流合作。
+        </p>
+      </div>
+      <div class="foot-links">
+        <a href="mailto:935329913@qq.com"><span class="dot"></span>935329913@qq.com</a>
+        <a href="tel:15160695726"><span class="dot"></span>15160695726</a>
+        <a href="http://xzx9353.github.io/xzx01/"><span class="dot"></span>xzx9353.github.io/xzx01</a>
+        <a href="https://github.com/xzx9353"><span class="dot"></span>github.com/xzx9353</a>
+      </div>
     </div>
-  </div>
+    <div class="copy">© 2026 XU ZHIXIANG · BUILT WITH HTML/CSS/JS</div>
+  </footer>
 
-  <h2>搜索引擎</h2>
-  <form action="https://www.baidu.com/">
-    <label for="search">百度</label>
-    <input type="text" id="search" name="q" placeholder="搜索..." />
-    <input type="submit" value="搜索" />
-  </form>
+  <script>
+    // 滚动进入动画
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+    }, { threshold: 0.12 });
+    document.querySelectorAll('.reveal').forEach(el => io.observe(el));
 
-  <h2>常用网站链接</h2>
-  <ul>
-    <li><a href="https://www.baidu.com/">百度</a></li>
-    <li><a href="https://www.zhihu.com/">知乎</a></li>
-    <li><a href="https://www.taobao.com/">淘宝</a></li>
-    <li><a href="https://www.jd.com/">京东</a></li>
-    <li><a href="https://xzx9353.github.io/xzx01/">徐志祥</a></li>
-  </ul>
+    // 项目卡片展开/折叠（300ms 平滑过渡）
+    function toggle(btn) {
+      const card = btn.parentElement;
+      const open = card.classList.toggle('open');
+      btn.setAttribute('aria-expanded', String(open));
+    }
+  </script>
 </body>
-
 </html>
