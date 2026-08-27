@@ -604,6 +604,42 @@
           </div>
         </div>
 
+        <div class="show reveal">
+          <div class="media car">
+            <span class="stage live">实测效果</span>
+            <div class="slides">
+              <div class="slide"><img data-src="assets/yolo-seg-pred.jpg" alt="YOLOv8-seg 蓝莓花朵分割预测" /></div>
+              <div class="slide"><img data-src="assets/yolo-seg-labels.jpg" alt="YOLOv8-seg 真值标签" /></div>
+            </div>
+            <button class="car-arrow prev">‹</button>
+            <button class="car-arrow next">›</button>
+            <div class="car-dots"><button class="active"></button><button></button></div>
+          </div>
+          <div class="body">
+            <h3>蓝莓花朵实例分割 · YOLOv8-seg</h3>
+            <p>自建数据集训练 YOLOv8-seg，对花朵/花苞做实例分割（左：模型输出，右：真值标签）。</p>
+            <div class="tag-row"><span class="tag">YOLO</span><span class="tag">实例分割</span><span class="tag">实际训练</span></div>
+          </div>
+        </div>
+
+        <div class="show reveal">
+          <div class="media car">
+            <span class="stage">训练指标</span>
+            <div class="slides">
+              <div class="slide"><img data-src="assets/yolo-train-results.jpg" alt="YOLOv8-seg 训练曲线" /></div>
+              <div class="slide"><img data-src="assets/yolo-confusion.jpg" alt="YOLOv8-seg 混淆矩阵" /></div>
+            </div>
+            <button class="car-arrow prev">‹</button>
+            <button class="car-arrow next">›</button>
+            <div class="car-dots"><button class="active"></button><button></button></div>
+          </div>
+          <div class="body">
+            <h3>YOLOv8-seg 训练曲线与混淆矩阵</h3>
+            <p>训练过程指标曲线与归一化混淆矩阵（花朵 / 花苞两类）。</p>
+            <div class="tag-row"><span class="tag">训练曲线</span><span class="tag">混淆矩阵</span></div>
+          </div>
+        </div>
+
       </div>
     </section>
 
@@ -915,6 +951,27 @@
               <li>实现「自然语言 → MCP 工具 → CAD 绘制」链路，拓展 Agent 工程能力边界</li>
             </ul>
             <div class="tag-row"><span class="tag">MCP</span><span class="tag">CAD 绘图</span><span class="tag">工具调用</span></div>
+          </div>
+        </div>
+
+        <div class="proj-card">
+          <button class="proj-head" onclick="toggle(this)" aria-expanded="false">
+            <span class="no">08</span>
+            <span class="t">
+              <h3>AI 视觉：蓝莓花朵实例分割与计数（YOLO + Mask R-CNN）</h3>
+              <p>自建蓝莓花朵/花苞数据集，实践 YOLO 系列与 Mask R-CNN 的检测、实例分割与计数任务</p>
+            </span>
+            <span class="chev">▾</span>
+          </button>
+          <div class="proj-body">
+            <ul>
+              <li>构建蓝莓花朵/花苞 COCO 实例分割数据集（约 17 万实例），完成训练集/验证集/测试集划分</li>
+              <li>实践 YOLOv8 / YOLOv10 / YOLOv11 系列检测与分割训练，探索 SE / CBAM 等注意力机制改进</li>
+              <li>基于 Detectron2 训练 Mask R-CNN（ResNet50-FPN），Box mAP50 0.872、Mask mAP50 0.865</li>
+              <li>实现目标计数评估：YOLOv8s-seg 平均每张约 6.4 个、Mask R-CNN 约 6.65 个（检测更敏感）</li>
+              <li>对比单阶段 / 两阶段架构在精度、速度、参数量与部署友好度上的差异</li>
+            </ul>
+            <div class="tag-row"><span class="tag">YOLO</span><span class="tag">Mask R-CNN</span><span class="tag">Detectron2</span><span class="tag">实例分割</span><span class="tag">目标计数</span></div>
           </div>
         </div>
 
