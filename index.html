@@ -484,7 +484,7 @@
         <div class="show reveal">
           <div class="media">
             <span class="stage live">平台演示</span>
-            <video controls preload="none" data-src="assets/zhiling-feilun.mp4" playsinline></video>
+            <video controls preload="none" data-src="assets/zhiling-feilun.mp4" data-poster="assets/zhiling-feilun-poster.jpg" playsinline></video>
           </div>
           <div class="body">
             <h3>AI Agent 智能体平台 · 智引飞轮</h3>
@@ -496,7 +496,7 @@
         <div class="show reveal">
           <div class="media">
             <span class="stage">DEMO</span>
-            <video controls preload="none" data-src="assets/demo-ai-furniture.mp4" playsinline></video>
+            <video controls preload="none" data-src="assets/demo-ai-furniture.mp4" data-poster="assets/demo-ai-furniture-poster.jpg" playsinline></video>
           </div>
           <div class="body">
             <h3>AI 智能家具设计（Demo）</h3>
@@ -578,8 +578,8 @@
           <div class="media car">
             <span class="stage">数字人演进</span>
             <div class="slides">
-              <div class="slide"><video controls preload="none" data-src="assets/digital-human-gen1.mp4" playsinline></video></div>
-              <div class="slide"><video controls preload="none" data-src="assets/digital-human-gen2.mp4" playsinline></video></div>
+              <div class="slide"><video controls preload="none" data-src="assets/digital-human-gen1.mp4" data-poster="assets/digital-human-gen1-poster.jpg" playsinline></video></div>
+              <div class="slide"><video controls preload="none" data-src="assets/digital-human-gen2.mp4" data-poster="assets/digital-human-gen2-poster.jpg" playsinline></video></div>
             </div>
             <button class="car-arrow prev">‹</button>
             <button class="car-arrow next">›</button>
@@ -1027,6 +1027,10 @@
         el.dataset.loaded = '1';
         el.src = el.dataset.src;
         el.removeAttribute('data-src');
+      }
+      if (el.tagName === 'VIDEO' && el.dataset.poster) { // 视频用首帧海报占位
+        el.poster = el.dataset.poster;
+        el.removeAttribute('data-poster');
       }
     }
     function toggleMore(btn) {
