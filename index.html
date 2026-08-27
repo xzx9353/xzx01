@@ -348,6 +348,28 @@
     .showcase-more { display: none; margin-top: 4px; }
     .showcase-more.open { display: grid; }
 
+    /* 荣誉证书（香槟金边框） */
+    .certs { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 22px; }
+    .cert { margin: 0; background: var(--paper); border: 1px solid var(--line); border-radius: 18px; overflow: hidden; }
+    .cert .frame {
+      position: relative; aspect-ratio: 4/3; margin: 0; padding: 16px;
+      background: linear-gradient(145deg, #f7f0de, #efe4c8); display: grid; place-items: center;
+      border-bottom: 1px solid var(--line);
+    }
+    .cert .frame::before {
+      content: ''; position: absolute; inset: 10px; pointer-events: none;
+      border: 1px solid rgba(178, 138, 52, .55); border-radius: 10px;
+    }
+    .cert .frame img {
+      max-width: 100%; max-height: 100%; object-fit: contain; cursor: zoom-in;
+      border: 5px solid #e6cd8a; outline: 1px solid rgba(0,0,0,.18);
+      border-radius: 6px; box-shadow: 0 10px 24px rgba(140, 105, 30, .25);
+      background: #fff;
+    }
+    .cert figcaption { padding: 16px 20px 20px; }
+    .cert figcaption h3 { margin: 0 0 6px; font-size: 16px; font-weight: 700; letter-spacing: .5px; }
+    .cert figcaption p { margin: 0 0 12px; font-size: 13.5px; color: var(--muted); }
+
     /* 全屏展示 lightbox */
     .lightbox {
       position: fixed; inset: 0; z-index: 1000;
@@ -417,6 +439,7 @@
       <a href="#skills">能力</a>
       <a href="#work">经历</a>
       <a href="#projects">项目</a>
+      <a href="#certs">荣誉</a>
       <a href="#contact">联系</a>
     </nav>
     <div class="nav-tag">AI ENGINEER / CN</div>
@@ -461,7 +484,7 @@
         <div class="show reveal">
           <div class="media">
             <span class="stage live">平台演示</span>
-            <video src="assets/zhiling-feilun.mp4" controls preload="metadata" playsinline></video>
+            <video controls preload="none" data-src="assets/zhiling-feilun.mp4" playsinline></video>
           </div>
           <div class="body">
             <h3>AI Agent 智能体平台 · 智引飞轮</h3>
@@ -473,7 +496,7 @@
         <div class="show reveal">
           <div class="media">
             <span class="stage">DEMO</span>
-            <video src="assets/demo-ai-furniture.mp4" controls preload="metadata" playsinline></video>
+            <video controls preload="none" data-src="assets/demo-ai-furniture.mp4" playsinline></video>
           </div>
           <div class="body">
             <h3>AI 智能家具设计（Demo）</h3>
@@ -485,7 +508,7 @@
         <div class="show reveal">
           <div class="media">
             <span class="stage">项目落地</span>
-            <img src="assets/digital-human.png" alt="实时数字人界面" />
+            <img data-src="assets/digital-human.png" alt="实时数字人界面" />
           </div>
           <div class="body">
             <h3>实时数字人交互系统</h3>
@@ -497,7 +520,7 @@
         <div class="show reveal">
           <div class="media">
             <span class="stage">新项目</span>
-            <img src="assets/cad-mcp.jpg" alt="AI 调用 CAD 的 MCP 绘图" />
+            <img data-src="assets/cad-mcp.jpg" alt="AI 调用 CAD 的 MCP 绘图" />
           </div>
           <div class="body">
             <h3>AI 调用 CAD · MCP 绘图</h3>
@@ -519,8 +542,8 @@
           <div class="media car">
             <span class="stage live">记忆功能</span>
             <div class="slides">
-              <div class="slide"><img src="assets/zhiling-memory-1.jpg" alt="智引飞轮记忆功能1" /></div>
-              <div class="slide"><img src="assets/zhiling-memory-2.jpg" alt="智引飞轮记忆功能2" /></div>
+              <div class="slide"><img data-src="assets/zhiling-memory-1.jpg" alt="智引飞轮记忆功能1" /></div>
+              <div class="slide"><img data-src="assets/zhiling-memory-2.jpg" alt="智引飞轮记忆功能2" /></div>
             </div>
             <button class="car-arrow prev">‹</button>
             <button class="car-arrow next">›</button>
@@ -537,8 +560,8 @@
           <div class="media car">
             <span class="stage">平台本地化</span>
             <div class="slides">
-              <div class="slide"><img src="assets/dify-local.png" alt="Dify 本地化" /></div>
-              <div class="slide"><img src="assets/maxkb-local.png" alt="MaxKB 本地化" /></div>
+              <div class="slide"><img data-src="assets/dify-local.png" alt="Dify 本地化" /></div>
+              <div class="slide"><img data-src="assets/maxkb-local.png" alt="MaxKB 本地化" /></div>
             </div>
             <button class="car-arrow prev">‹</button>
             <button class="car-arrow next">›</button>
@@ -555,8 +578,8 @@
           <div class="media car">
             <span class="stage">数字人演进</span>
             <div class="slides">
-              <div class="slide"><video src="assets/digital-human-gen1.mp4" controls preload="metadata" playsinline></video></div>
-              <div class="slide"><video src="assets/digital-human-gen2.mp4" controls preload="metadata" playsinline></video></div>
+              <div class="slide"><video controls preload="none" data-src="assets/digital-human-gen1.mp4" playsinline></video></div>
+              <div class="slide"><video controls preload="none" data-src="assets/digital-human-gen2.mp4" playsinline></video></div>
             </div>
             <button class="car-arrow prev">‹</button>
             <button class="car-arrow next">›</button>
@@ -572,7 +595,7 @@
         <div class="show reveal">
           <div class="media">
             <span class="stage">TTS 测试</span>
-            <img src="assets/tts-test.png" alt="各类 TTS 语音合成测试" />
+            <img data-src="assets/tts-test.png" alt="各类 TTS 语音合成测试" />
           </div>
           <div class="body">
             <h3>各类 TTS 语音合成测试</h3>
@@ -897,6 +920,28 @@
 
       </div>
     </section>
+
+    <!-- 荣誉证书 -->
+    <section class="section" id="certs">
+      <div class="sec-head reveal">
+        <span class="no">07</span>
+        <h2>荣誉证书</h2>
+        <span class="en">Certificates</span>
+        <div class="rule"></div>
+      </div>
+      <div class="certs">
+        <figure class="cert reveal">
+          <div class="frame">
+            <img data-src="assets/cert-xmu.jpg" alt="厦门大学研修班结业证书" />
+          </div>
+          <figcaption>
+            <h3>厦门大学研修班 · 结业证书</h3>
+            <p>完成厦门大学相关专业研修课程并顺利结业。</p>
+            <div class="tag-row"><span class="tag">培训认证</span><span class="tag">厦门大学</span></div>
+          </figcaption>
+        </figure>
+      </div>
+    </section>
   </main>
 
   <!-- 页脚 -->
@@ -977,15 +1022,35 @@
     initCarousels();
 
     // 更多作品展开/收起
+    function loadNow(el) { // 立即加载懒资源
+      if (el.dataset.src && !el.dataset.loaded) {
+        el.dataset.loaded = '1';
+        el.src = el.dataset.src;
+        el.removeAttribute('data-src');
+      }
+    }
     function toggleMore(btn) {
       const box = document.getElementById('showcaseMore');
       const open = box.classList.toggle('open');
       btn.textContent = open ? '− 收起' : '＋ 更多作品';
       btn.setAttribute('aria-expanded', String(open));
-      if (open) { // 展开后重新触发隐藏卡片的滚动动画
+      if (open) { // 展开后加载隐藏媒体并触发滚动动画
+        box.querySelectorAll('img[data-src], video[data-src]').forEach(loadNow);
         box.querySelectorAll('.reveal').forEach(el => el.classList.add('in'));
       }
     }
+    // 懒加载：图片/视频进入视口后再请求，节省 GitHub 带宽
+    (function lazyInit() {
+      const targets = () => document.querySelectorAll('img[data-src], video[data-src]');
+      if ('IntersectionObserver' in window) {
+        const io = new IntersectionObserver((entries) => {
+          entries.forEach(en => { if (en.isIntersecting) { loadNow(en.target); io.unobserve(en.target); } });
+        }, { rootMargin: '300px' });
+        targets().forEach(el => io.observe(el));
+      } else {
+        targets().forEach(loadNow);
+      }
+    })();
 
     // 全屏展示：点击图片/视频跳出，完整展示；轮播卡片可左右切换
     const lb = document.getElementById('lightbox');
@@ -1016,6 +1081,7 @@
     }
 
     function openLightbox(mediaEl) {
+      loadNow(mediaEl); // 确保尚未懒加载的媒体先加载
       const car = mediaEl.closest('.car');
       if (car) {
         const slides = [...car.querySelectorAll('.slide')];
@@ -1038,6 +1104,7 @@
 
     function syncLb() {
       const media = lbCar[lbIdx].querySelector('img, video');
+      loadNow(media);
       renderLbMedia(media);
       lbCount.textContent = (lbIdx + 1) + ' / ' + lbCar.length;
     }
@@ -1061,7 +1128,7 @@
       if (e.key === 'ArrowRight' && lbCar) lbNext.click();
     });
     // 点击图片/视频触发全屏展示
-    document.querySelectorAll('.show .media img, .show .media video').forEach(m => {
+    document.querySelectorAll('.show .media img, .show .media video, .cert .frame img').forEach(m => {
       m.addEventListener('click', () => openLightbox(m));
     });
   </script>
