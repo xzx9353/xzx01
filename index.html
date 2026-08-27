@@ -307,6 +307,46 @@
     .show .body h3 { margin: 0 0 6px; font-size: 17px; font-weight: 700; letter-spacing: .5px; }
     .show .body p { margin: 0 0 12px; font-size: 13.5px; color: var(--muted); }
 
+    /* 叠加轮播（同项目多素材左右切换） */
+    .car { position: relative; }
+    .car .slides {
+      position: absolute; inset: 0;
+      display: flex; transition: transform .3s ease-in-out;
+    }
+    .car .slide { min-width: 100%; display: grid; place-items: center; }
+    .car .slide img, .car .slide video { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .car-arrow {
+      position: absolute; top: 50%; transform: translateY(-50%); z-index: 4;
+      width: 30px; height: 30px; border-radius: 50%; border: none; cursor: pointer;
+      background: rgba(25,25,25,.5); color: #fff; font-size: 16px; line-height: 1;
+      display: grid; place-items: center; transition: background .3s ease-in-out;
+      font-family: var(--mono);
+    }
+    .car-arrow:hover { background: var(--accent); }
+    .car-arrow.prev { left: 10px; }
+    .car-arrow.next { right: 10px; }
+    .car-dots {
+      position: absolute; left: 0; right: 0; bottom: 10px; z-index: 4;
+      display: flex; justify-content: center; gap: 6px;
+    }
+    .car-dots button {
+      width: 8px; height: 8px; border-radius: 50%; border: none; cursor: pointer;
+      padding: 0; background: rgba(255,255,255,.5); transition: background .3s ease-in-out;
+    }
+    .car-dots button.active { background: #fff; scale: 1.3; }
+
+    /* 更多作品 */
+    .more-btn {
+      margin: 26px auto 10px; display: flex; align-items: center; gap: 8px;
+      font-family: var(--body); font-weight: 500; font-size: 14px;
+      padding: 12px 24px; border-radius: 999px; cursor: pointer;
+      border: 1px solid var(--line-strong); background: var(--paper); color: var(--ink);
+      transition: var(--ease);
+    }
+    .more-btn:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-2px); }
+    .showcase-more { display: none; margin-top: 4px; }
+    .showcase-more.open { display: grid; }
+
     .reveal { opacity: 0; transform: translateY(26px); transition: opacity .7s ease, transform .7s ease; }
     .reveal.in { opacity: 1; transform: none; }
     .hero .stagger { opacity: 0; transform: translateY(26px); animation: rise .8s ease forwards; }
@@ -437,6 +477,82 @@
             <div class="tag-row"><span class="tag">MCP</span><span class="tag">CAD 绘图</span></div>
           </div>
         </div>
+      </div>
+
+      <!-- 更多作品按钮 -->
+      <div style="text-align:center">
+        <button class="more-btn" id="moreToggle" onclick="toggleMore(this)" aria-expanded="false">＋ 更多作品</button>
+      </div>
+
+      <!-- 隐藏作品（点击"更多"后显示，同项目素材用叠加轮播切换） -->
+      <div class="showcase showcase-more" id="showcaseMore">
+
+        <div class="show reveal">
+          <div class="media car">
+            <span class="stage live">记忆功能</span>
+            <div class="slides">
+              <div class="slide"><img src="assets/zhiling-memory-1.jpg" alt="智引飞轮记忆功能1" /></div>
+              <div class="slide"><img src="assets/zhiling-memory-2.jpg" alt="智引飞轮记忆功能2" /></div>
+            </div>
+            <button class="car-arrow prev">‹</button>
+            <button class="car-arrow next">›</button>
+            <div class="car-dots"><button class="active"></button><button></button></div>
+          </div>
+          <div class="body">
+            <h3>智引飞轮 · 记忆功能</h3>
+            <p>AI Agent 平台的会话记忆 / Memory 机制功能界面（2 张截图）。</p>
+            <div class="tag-row"><span class="tag">记忆功能</span><span class="tag">Agent 平台</span></div>
+          </div>
+        </div>
+
+        <div class="show reveal">
+          <div class="media car">
+            <span class="stage">平台本地化</span>
+            <div class="slides">
+              <div class="slide"><img src="assets/dify-local.png" alt="Dify 本地化" /></div>
+              <div class="slide"><img src="assets/maxkb-local.png" alt="MaxKB 本地化" /></div>
+            </div>
+            <button class="car-arrow prev">‹</button>
+            <button class="car-arrow next">›</button>
+            <div class="car-dots"><button class="active"></button><button></button></div>
+          </div>
+          <div class="body">
+            <h3>Dify / MaxKB 本地化部署</h3>
+            <p>基于开源 AI 平台二次开发，实现企业品牌化定制的本地化界面。</p>
+            <div class="tag-row"><span class="tag">Dify</span><span class="tag">MaxKB</span><span class="tag">本地化</span></div>
+          </div>
+        </div>
+
+        <div class="show reveal">
+          <div class="media car">
+            <span class="stage">数字人演进</span>
+            <div class="slides">
+              <div class="slide"><video src="assets/digital-human-gen1.mp4" controls preload="metadata" playsinline></video></div>
+              <div class="slide"><video src="assets/digital-human-gen2.mp4" controls preload="metadata" playsinline></video></div>
+            </div>
+            <button class="car-arrow prev">‹</button>
+            <button class="car-arrow next">›</button>
+            <div class="car-dots"><button class="active"></button><button></button></div>
+          </div>
+          <div class="body">
+            <h3>数字人 · 初代与二代</h3>
+            <p>数字人交互演进：初代 / 二代演示视频（左右滑动切换，可播放）。</p>
+            <div class="tag-row"><span class="tag">视频</span><span class="tag">数字人</span></div>
+          </div>
+        </div>
+
+        <div class="show reveal">
+          <div class="media">
+            <span class="stage">TTS 测试</span>
+            <img src="assets/tts-test.png" alt="各类 TTS 语音合成测试" />
+          </div>
+          <div class="body">
+            <h3>各类 TTS 语音合成测试</h3>
+            <p>多引擎 TTS 声音合成与效果对比测试界面。</p>
+            <div class="tag-row"><span class="tag">TTS</span><span class="tag">语音合成</span></div>
+          </div>
+        </div>
+
       </div>
     </section>
 
@@ -786,6 +902,52 @@
       const card = btn.parentElement;
       const open = card.classList.toggle('open');
       btn.setAttribute('aria-expanded', String(open));
+    }
+
+    // 叠加轮播：左右箭头 + 指示点 + 触屏滑动
+    function initCarousels() {
+      document.querySelectorAll('.car').forEach(car => {
+        const track = car.querySelector('.slides');
+        const dotsWrap = car.querySelector('.car-dots');
+        const total = track.children.length;
+        if (total < 2) { dotsWrap.remove(); return; }
+        let idx = 0;
+        // 动态生成指示点
+        dotsWrap.innerHTML = '';
+        for (let i = 0; i < total; i++) {
+          const d = document.createElement('button');
+          if (i === 0) d.classList.add('active');
+          d.addEventListener('click', () => { idx = i; update(); });
+          dotsWrap.appendChild(d);
+        }
+        const dots = dotsWrap.children;
+        const go = dir => { idx = (idx + dir + total) % total; update(); };
+        const update = () => {
+          track.style.transform = `translateX(-${idx * 100}%)`;
+          [...dots].forEach((d, i) => d.classList.toggle('active', i === idx));
+        };
+        car.querySelector('.prev').addEventListener('click', () => go(-1));
+        car.querySelector('.next').addEventListener('click', () => go(1));
+        // 触屏左右滑动切换
+        let sx = 0;
+        track.addEventListener('touchstart', e => { sx = e.touches[0].clientX; }, { passive: true });
+        track.addEventListener('touchend', e => {
+          const dx = e.changedTouches[0].clientX - sx;
+          if (Math.abs(dx) > 40) { dx < 0 ? go(1) : go(-1); }
+        }, { passive: true });
+      });
+    }
+    initCarousels();
+
+    // 更多作品展开/收起
+    function toggleMore(btn) {
+      const box = document.getElementById('showcaseMore');
+      const open = box.classList.toggle('open');
+      btn.textContent = open ? '− 收起' : '＋ 更多作品';
+      btn.setAttribute('aria-expanded', String(open));
+      if (open) { // 展开后重新触发隐藏卡片的滚动动画
+        box.querySelectorAll('.reveal').forEach(el => el.classList.add('in'));
+      }
     }
   </script>
 </body>
